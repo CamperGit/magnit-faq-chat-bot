@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db-content:
+    image: postgres:11.14
+    restart: always
+    environment:
+      POSTGRES_DB: "magnit-faq-bot-db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "5460:5432"
+    volumes:
+      - magnitdata:/var/lib/postgresql/data
+volumes:
+  magnitdata:
