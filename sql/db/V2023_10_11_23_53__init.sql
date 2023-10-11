@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.algorithm
     id bigint NOT NULL,
     title character varying(255) COLLATE pg_catalog."default" NOT NULL,
     text character varying(1000) COLLATE pg_catalog."default" NOT NULL,
-    faq_id bigint NOT NULL,
+    faq_id bigint,
     CONSTRAINT algoritm_pkey PRIMARY KEY (id),
     CONSTRAINT algoritm_faq_id_fk FOREIGN KEY (faq_id)
     REFERENCES public.faq (id) MATCH SIMPLE
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS public.example
     id bigint NOT NULL,
     precondition character varying(1000) COLLATE pg_catalog."default" NOT NULL,
     solution character varying(10000) COLLATE pg_catalog."default" NOT NULL,
-    algorithm_id bigint NOT NULL,
+    algorithm_id bigint,
     CONSTRAINT example_pkey PRIMARY KEY (id),
     CONSTRAINT example_algoritm_id_fq FOREIGN KEY (algorithm_id)
     REFERENCES public.algorithm (id) MATCH SIMPLE

@@ -6,4 +6,6 @@ import ru.ds.magnitfaqchatbot.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    UserEntity findByTelegramId(String telegramId);
 }

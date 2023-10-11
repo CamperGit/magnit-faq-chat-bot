@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.ds.magnitfaqchatbot.bot.handler.command.BotCommandHandler;
-import ru.ds.magnitfaqchatbot.bot.handler.command.DefaultCommandHandler;
+import ru.ds.magnitfaqchatbot.bot.handler.command.SearchFaqCommandHandler;
 import ru.ds.magnitfaqchatbot.bot.provider.BotCommandHandlerProvider;
 
 import java.util.List;
@@ -16,18 +16,18 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BotCommandHandlerProviderImpl implements BotCommandHandlerProvider {
 
-    DefaultCommandHandler defaultCommandHandler;
+    SearchFaqCommandHandler searchFaqCommandHandler;
 
     List<BotCommandHandler> commandHandlers;
 
     @Override
     public BotCommandHandler getBotCommandHandler(String message) {
         if (StringUtils.isEmpty(message)) {
-            return defaultCommandHandler;
+            return searchFaqCommandHandler;
         }
         return commandHandlers.stream()
                 .filter((handler) -> handler.isApplicable(message))
                 .findFirst()
-                .orElse(defaultCommandHandler);
+                .orElse(searchFaqCommandHandler);
     }
 }

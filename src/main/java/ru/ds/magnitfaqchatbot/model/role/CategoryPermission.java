@@ -4,6 +4,8 @@ package ru.ds.magnitfaqchatbot.model.role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -11,5 +13,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryPermission {
 
-    String title;
+    List<String> categories;
 }

@@ -9,6 +9,7 @@ import ru.ds.magnitfaqchatbot.repository.ExampleRepository;
 import ru.ds.magnitfaqchatbot.service.ExampleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class ExampleServiceImpl implements ExampleService {
     @Override
     public ExampleEntity save(ExampleEntity example) {
         return exampleRepository.save(example);
+    }
+
+    @Override
+    public List<ExampleEntity> saveAll(List<ExampleEntity> examples) {
+        return exampleRepository.saveAll(examples);
     }
 
     @Override

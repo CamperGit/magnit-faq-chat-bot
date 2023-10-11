@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import ru.ds.magnitfaqchatbot.entity.AlgorithmEntity;
 import ru.ds.magnitfaqchatbot.repository.AlgorithmRepository;
 import ru.ds.magnitfaqchatbot.service.AlgorithmService;
+import ru.ds.magnitfaqchatbot.service.ExampleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +20,21 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
     AlgorithmRepository algorithmRepository;
 
+    ExampleService exampleService;
+
     @Override
     public AlgorithmEntity save(AlgorithmEntity algorithm) {
+        algorithm.setExamples(exampleService.saveAll(algorithm.getExamples()));
         return algorithmRepository.save(algorithm);
+    }
+
+    @Override
+    public List<AlgorithmEntity> saveAll(List<AlgorithmEntity> algorithms) {
+        List<AlgorithmEntity> savedAlgorithms = new ArrayList<>();
+        for (AlgorithmEntity algorithm : algorithms) {
+            savedAlgorithms.add(save(algorithm));
+        }
+        return savedAlgorithms;
     }
 
     @Override

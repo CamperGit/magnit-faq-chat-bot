@@ -9,6 +9,7 @@ import ru.ds.magnitfaqchatbot.repository.UserRepository;
 import ru.ds.magnitfaqchatbot.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public UserEntity getByTelegramId(String telegramId) {
+        return Optional.ofNullable(userRepository.findByTelegramId(telegramId))
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Not found user for telegram id = %s", telegramId)));
     }
 }
