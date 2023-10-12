@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -30,11 +31,18 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SearchFaqCommandHandler implements BotCommandHandler {
 
-    static int PAGE_NUMBER = 0;
+    static String QUESTION_FORMAT = "%s: ";
+    static String ANSWER_FORMAT = "%s: ";
+    static String CATEGORY_FORMAT = "%s: ";
 
+    static int PAGE_NUMBER = 0;
     static int PAGE_SIZE = 5;
 
     static String SEARCH_NOT_FOUND_MESSAGE_SOURCE = "search.not-found";
+    static String FAQ_QUESTION_MESSAGE_SOURCE = "faq.question";
+    static String FAQ_CATEGORY_MESSAGE_SOURCE = "faq.category";
+    static String FAQ_ANSWER_MESSAGE_SOURCE = "faq.answer";
+    static String FAQ_ALGORITHMS_MESSAGE_SOURCE = "faq.algorithms";
 
     LocaleMessageSource localeMessageSource;
 
@@ -89,8 +97,28 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
     }
 
     private void generateAndSendFaqMessage(MagnitFaqChatBot bot, String chatId, FaqDto faqDto) throws TelegramApiException {
-        SendMessage sendMessage = new SendMessage(chatId, faqDto.getTitle());
+        SendMessage sendMessage = new SendMessage(chatId, getFaqText(faqDto));
         sendMessage.setReplyMarkup(markupGenerator.getFaqMarkup(faqDto));
+        sendMessage.enableHtml(true);
         bot.execute(sendMessage);
+    }
+
+    private String getFaqText(FaqDto faq) {
+        StringBuilder builder = new StringBuilder(addWrapLine(wrapInBold(faq.getTitle())))
+                .append(addWrapLine())
+                .append(wrapInBold(String.format(CATEGORY_FORMAT, localeMessageSource.getMessage(FAQ_CATEGORY_MESSAGE_SOURCE))))
+                .append(addWrapLine(faq.getCategory().getTitle()))
+                .append(wrapInBold(String.format(QUESTION_FORMAT, localeMessageSource.getMessage(FAQ_QUESTION_MESSAGE_SOURCE))))
+                .append(addWrapLine(faq.getQuestion()))
+                .append(wrapInBold(String.format(ANSWER_FORMAT, localeMessageSource.getMessage(FAQ_ANSWER_MESSAGE_SOURCE))))
+                .append(faq.getAnswer());
+
+        if (!CollectionUtils.isEmpty(faq.getAlgorithms())) {
+            builder.append(addWrapLine())
+                    .append(addWrapLine())
+                    .append(wrapInBold(localeMessageSource.getMessage(FAQ_ALGORITHMS_MESSAGE_SOURCE)));
+        }
+
+        return builder.toString();
     }
 }

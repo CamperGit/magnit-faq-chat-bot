@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.ds.magnitfaqchatbot.entity.AlgorithmEntity;
+import ru.ds.magnitfaqchatbot.entity.ExampleEntity;
 import ru.ds.magnitfaqchatbot.repository.AlgorithmRepository;
 import ru.ds.magnitfaqchatbot.service.AlgorithmService;
 import ru.ds.magnitfaqchatbot.service.ExampleService;
@@ -24,7 +26,10 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
     @Override
     public AlgorithmEntity save(AlgorithmEntity algorithm) {
-        algorithm.setExamples(exampleService.saveAll(algorithm.getExamples()));
+        List<ExampleEntity> examples = algorithm.getExamples();
+        if (!CollectionUtils.isEmpty(examples)) {
+            algorithm.setExamples(exampleService.saveAll(examples));
+        }
         return algorithmRepository.save(algorithm);
     }
 

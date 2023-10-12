@@ -10,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum CallbackFormat {
 
-    ALGORITHM_FORMAT("algorithm.[%d]", "algorithm.[\\d]", "[\\]\\[]");
+    ALGORITHM_FORMAT("algorithm.[%d]", "algorithm.\\[\\d{0,}\\]", "\\[\\d{0,}\\]"),
+    EXAMPLE_FORMAT("example.[%d]", "example.\\[\\d{0,}\\]", "\\[\\d{0,}\\]");
 
     String value;
     String applicableRegex;

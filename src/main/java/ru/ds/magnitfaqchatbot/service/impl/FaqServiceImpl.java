@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.ds.magnitfaqchatbot.entity.AlgorithmEntity;
 import ru.ds.magnitfaqchatbot.entity.FaqEntity;
@@ -39,7 +40,10 @@ public class FaqServiceImpl implements FaqService {
 
     @Override
     public FaqEntity save(FaqEntity faq) {
-        faq.setAlgorithms(algorithmService.saveAll(faq.getAlgorithms()));
+        List<AlgorithmEntity> algorithms = faq.getAlgorithms();
+        if (!CollectionUtils.isEmpty(algorithms)) {
+            faq.setAlgorithms(algorithmService.saveAll(algorithms));
+        }
         return faqRepository.save(faq);
     }
 

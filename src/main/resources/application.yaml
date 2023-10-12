@@ -16,3 +16,8 @@ telegram:
   bot:
     username: MagnitFaqChatBot
     token: 6604174182:AAGY-_d2vbTCxR3DG9MulapXYiCQLmQr6aw
+
+button:
+  limit:
+    algorithms: 3
+    examples: 3
