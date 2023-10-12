@@ -15,4 +15,7 @@ public interface UserService {
 
     @Transactional
     UserEntity getByTelegramId(String telegramId);
+
+    @Transactional
+    UserEntity getByTelegramIdOrCreate(String telegramId);
 }

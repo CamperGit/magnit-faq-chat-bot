@@ -17,8 +17,8 @@ import ru.ds.magnitfaqchatbot.dto.UserRoleDto;
 import ru.ds.magnitfaqchatbot.entity.FaqEntity;
 import ru.ds.magnitfaqchatbot.mapper.Mapper;
 import ru.ds.magnitfaqchatbot.model.faq.FaqSearchPayload;
-import ru.ds.magnitfaqchatbot.model.role.CategoryPermission;
-import ru.ds.magnitfaqchatbot.model.role.RolePermission;
+import ru.ds.magnitfaqchatbot.model.role.CategoryPermissions;
+import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 import ru.ds.magnitfaqchatbot.service.FaqService;
 import ru.ds.magnitfaqchatbot.service.LocaleMessageSource;
 import ru.ds.magnitfaqchatbot.service.UserService;
@@ -36,7 +36,6 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
     static String CATEGORY_FORMAT = "%s: ";
 
     static int PAGE_NUMBER = 0;
-    static int PAGE_SIZE = 5;
 
     static String SEARCH_NOT_FOUND_MESSAGE_SOURCE = "search.not-found";
     static String FAQ_QUESTION_MESSAGE_SOURCE = "faq.question";
@@ -64,7 +63,7 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
                 .titleLike(text)
                 .categoriesIn(getUserCategoriesIn(user))
                 .pageNumber(PAGE_NUMBER)
-                .pageSize(PAGE_SIZE)
+                .pageSize(user.getSettings().getSearchSettings().getFaqPageSize())
                 .build());
 
         if (search.isEmpty()) {
@@ -89,8 +88,8 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
         return user.getRoles()
                 .stream()
                 .map(UserRoleDto::getPermissions)
-                .map(RolePermission::getCategoryPermissions)
-                .map(CategoryPermission::getCategories)
+                .map(RolePermissions::getCategoryPermissions)
+                .map(CategoryPermissions::getCategories)
                 .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());

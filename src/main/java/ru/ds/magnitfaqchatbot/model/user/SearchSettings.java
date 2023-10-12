@@ -1,16 +1,14 @@
-package ru.ds.magnitfaqchatbot.model.role;
+package ru.ds.magnitfaqchatbot.model.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RolePermission {
+public class SearchSettings {
 
-    CategoryPermission categoryPermissions;
+    Integer faqPageSize;
 }

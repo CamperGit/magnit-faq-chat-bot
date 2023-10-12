@@ -29,6 +29,12 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    public UserRoleEntity findRoleByName(String role) {
+        return userRoleRepository.findByTitle(role)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Not found user role for title = %s", role)));
+    }
+
+    @Override
     public void deleteById(Long id) {
         userRoleRepository.deleteById(id);
     }

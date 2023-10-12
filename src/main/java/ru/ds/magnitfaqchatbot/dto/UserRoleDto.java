@@ -2,7 +2,7 @@ package ru.ds.magnitfaqchatbot.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.ds.magnitfaqchatbot.model.role.RolePermission;
+import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 
 @Getter
 @Setter
@@ -16,5 +16,5 @@ public class UserRoleDto {
 
     String title;
 
-    RolePermission permissions;
+    RolePermissions permissions;
 }

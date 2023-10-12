@@ -2,6 +2,7 @@ package ru.ds.magnitfaqchatbot.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.ds.magnitfaqchatbot.model.user.UserSettings;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class UserDto {
     String department;
 
     String telegramId;
+
+    UserSettings settings;
 
     List<UserRoleDto> roles;
 }

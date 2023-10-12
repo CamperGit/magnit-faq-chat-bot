@@ -2,6 +2,8 @@ package ru.ds.magnitfaqchatbot.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.ds.magnitfaqchatbot.model.converter.UserSettingsJsonConverter;
+import ru.ds.magnitfaqchatbot.model.user.UserSettings;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,6 +31,10 @@ public class UserEntity {
 
     @Column(name = "telegram_chat_id")
     String telegramId;
+
+    @Column(name = "settings", columnDefinition = "jsonb", nullable = false)
+    @Convert(converter = UserSettingsJsonConverter.class)
+    UserSettings settings;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -7,15 +7,19 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.ds.magnitfaqchatbot.bot.handler.callback.BotCallbackHandler;
 import ru.ds.magnitfaqchatbot.bot.handler.command.BotCommandHandler;
 import ru.ds.magnitfaqchatbot.bot.provider.BotCallbackHandlerProvider;
 import ru.ds.magnitfaqchatbot.bot.provider.BotCommandHandlerProvider;
+import ru.ds.magnitfaqchatbot.entity.UserEntity;
 import ru.ds.magnitfaqchatbot.exception.MagnitFaqChatBotTelegramException;
 import ru.ds.magnitfaqchatbot.property.TelegramBotProperties;
 import ru.ds.magnitfaqchatbot.service.LocaleMessageSource;
+import ru.ds.magnitfaqchatbot.service.UserService;
 
 @Component
 @Slf4j
@@ -28,16 +32,16 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
 
     BotCommandHandlerProvider botCommandHandlerProvider;
 
-    LocaleMessageSource localeMessageSource;
+    UserService userService;
 
     public MagnitFaqChatBot(TelegramBotProperties botProperties,
                             BotCallbackHandlerProvider botCallbackHandlerProvider,
-                            BotCommandHandlerProvider botCommandHandlerProvider, LocaleMessageSource localeMessageSource) {
+                            BotCommandHandlerProvider botCommandHandlerProvider, UserService userService) {
         super(new DefaultBotOptions());
         this.botProperties = botProperties;
         this.botCallbackHandlerProvider = botCallbackHandlerProvider;
         this.botCommandHandlerProvider = botCommandHandlerProvider;
-        this.localeMessageSource = localeMessageSource;
+        this.userService = userService;
     }
 
     @Override
@@ -55,7 +59,9 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
         try {
             //CallbackQuery handling
             if (update.hasCallbackQuery() && !update.getCallbackQuery().getData().equals("null")) {
-                String callback = update.getCallbackQuery().getData();
+                CallbackQuery callbackQuery = update.getCallbackQuery();
+                createNewUserByTelegramId(callbackQuery.getMessage().getChatId().toString());
+                String callback = callbackQuery.getData();
                 BotCallbackHandler botCallbackHandler = botCallbackHandlerProvider.getBotCallbackHandler(callback);
                 if (botCallbackHandler != null) {
                     botCallbackHandler.handle(this, update);
@@ -63,8 +69,10 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             }
 
             //Commands and nonCommands messages handling
-            if (update.getMessage() != null && update.getMessage().hasText()) {
-                String text = update.getMessage().getText();
+            Message message = update.getMessage();
+            if (message != null && message.hasText()) {
+                createNewUserByTelegramId(message.getChatId().toString());
+                String text = message.getText();
                 BotCommandHandler botCommandHandler = botCommandHandlerProvider.getBotCommandHandler(text);
                 botCommandHandler.handle(this, update);
             }
@@ -72,5 +80,9 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             log.error("Commands and none commands handling exception", e);
             throw new MagnitFaqChatBotTelegramException("Error while trying to handle telegram command or callback query", e);
         }
+    }
+
+    private UserEntity createNewUserByTelegramId(String telegramId) {
+        return userService.getByTelegramIdOrCreate(telegramId);
     }
 }

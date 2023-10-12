@@ -10,28 +10,19 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ds.magnitfaqchatbot.model.role.RolePermission;
+import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 
 import javax.persistence.AttributeConverter;
 
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RolePermissionJsonConverter implements AttributeConverter<RolePermission, String> {
+public class RolePermissionsJsonConverter implements AttributeConverter<RolePermissions, String> {
 
     ObjectMapper objectMapper;
 
-    public RolePermissionJsonConverter() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        this.objectMapper = mapper;
-    }
-
     @Override
-    public String convertToDatabaseColumn(RolePermission rolePermissions) {
+    public String convertToDatabaseColumn(RolePermissions rolePermissions) {
         try {
             return objectMapper.writeValueAsString(rolePermissions);
         } catch (JsonProcessingException e) {
@@ -40,9 +31,9 @@ public class RolePermissionJsonConverter implements AttributeConverter<RolePermi
     }
 
     @Override
-    public RolePermission convertToEntityAttribute(String dbData) {
+    public RolePermissions convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, RolePermission.class);
+            return objectMapper.readValue(dbData, RolePermissions.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Couldn't read json object", e);
         }
