@@ -20,6 +20,9 @@ import ru.ds.magnitfaqchatbot.service.UserService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Обработчик команды на установку лимита поиска ЧаВо
+ */
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -38,10 +41,13 @@ public class SetFaqSearchCommandHandler implements BotCommandHandler {
         Message message = update.getMessage();
         String chatId = message.getChatId().toString();
         String text = message.getText();
+        //Поиск лимита поиска ЧаВо
         Matcher limitMatcher = Pattern.compile(COMMAND_PATTERN).matcher(text);
         if (limitMatcher.find()) {
             String limitGroup = limitMatcher.group(LIMIT_GROUP);
+            //Лимит
             int newFaqSearchLimit = Integer.parseInt(limitGroup);
+            //Получение и обновление лимита поиска ЧаВо и сохранения настроек пользователя
             UserDto user = mapper.map(userService.getByTelegramId(chatId), UserDto.class);
             user.setSettings(UserSettings.builder()
                             .searchSettings(SearchSettings.builder()

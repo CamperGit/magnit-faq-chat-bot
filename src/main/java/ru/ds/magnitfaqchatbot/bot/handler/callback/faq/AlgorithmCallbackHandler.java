@@ -38,11 +38,13 @@ public class AlgorithmCallbackHandler implements BotCallbackHandler {
 
     @Override
     public void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException {
+        // Получение алгоритма из БД
         String chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         Long id = getIdFromString(CallbackFormat.ALGORITHM_FORMAT, update.getCallbackQuery().getData());
         AlgorithmEntity algorithm = algorithmService.getById(id);
         AlgorithmDto algorithmDto = mapper.map(algorithm, AlgorithmDto.class);
 
+        // Отправка сообщений
         SendMessage sendMessage = new SendMessage(chatId, getAlgorithmText(algorithmDto));
         sendMessage.setReplyMarkup(markupGenerator.getAlgorithmMarkup(algorithmDto));
         sendMessage.enableHtml(true);
@@ -54,6 +56,7 @@ public class AlgorithmCallbackHandler implements BotCallbackHandler {
         return Pattern.compile(CallbackFormat.ALGORITHM_FORMAT.getApplicableRegex()).matcher(callback).find();
     }
 
+    // Получение текста алгоритма
     private String getAlgorithmText(AlgorithmDto algorithm) {
         StringBuilder builder = new StringBuilder(addWrapLine(wrapInBold(algorithm.getTitle())))
                 .append(addWrapLine(wrapInBold(String.format(TEXT_FORMAT, localeMessageSource.getMessage(ALGORITHM_TEXT_MESSAGE_SOURCE)))))

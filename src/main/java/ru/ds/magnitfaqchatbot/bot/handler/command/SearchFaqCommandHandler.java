@@ -26,6 +26,9 @@ import ru.ds.magnitfaqchatbot.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Обработчик поиска ЧаВо
+ */
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -55,9 +58,12 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
 
     @Override
     public void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException {
+        //Получение начальных данных
         String chatId = update.getMessage().getChatId().toString();
         UserDto user = mapper.map(userService.getByTelegramId(chatId), UserDto.class);
         String text = update.getMessage().getText();
+
+        //Поиск
         Page<FaqEntity> search = faqService.search(FaqSearchPayload.builder()
                 .questionLike(text)
                 .titleLike(text)
@@ -66,6 +72,7 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
                 .pageSize(user.getSettings().getSearchSettings().getFaqPageSize())
                 .build());
 
+        //Отправка сообщения, если ничего не найдено
         if (search.isEmpty()) {
             bot.execute(SendMessage.builder()
                     .chatId(chatId)
@@ -73,6 +80,7 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
                     .build());
         }
 
+        //Отправка сообщений по каждому из ЧаВо
         List<FaqDto> faqDtos = mapper.mapAsList(search.getContent(), FaqDto.class);
         for (FaqDto faq : faqDtos) {
             generateAndSendFaqMessage(bot, chatId, faq);

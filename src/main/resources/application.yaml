@@ -15,7 +15,7 @@ locale:
 telegram:
   bot:
     username: MagnitFaqChatBot
-    token: token
+    token: 6604174182:AAHURc6pABvO4gO-l5zpN82NzvDGHhPJ8kM
 
 button:
   limit:

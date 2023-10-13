@@ -31,6 +31,7 @@ public class MarkupGenerator {
     static String EXAMPLE_BUTTON_TITLE_FORMAT = "%s%d";
     static String EXAMPLE_TITLE_MESSAGE_SOURCE = "example.title";
 
+    // Получение разметки ЧаВо
     public InlineKeyboardMarkup getFaqMarkup(FaqDto faq) {
         if (CollectionUtils.isEmpty(faq.getAlgorithms())) {
             return null;
@@ -50,6 +51,7 @@ public class MarkupGenerator {
         return inlineKeyboardMarkup;
     }
 
+    // Получение разметки алгоритма
     public InlineKeyboardMarkup getAlgorithmMarkup(AlgorithmDto algorithmDto) {
         if (CollectionUtils.isEmpty(algorithmDto.getExamples())) {
             return null;

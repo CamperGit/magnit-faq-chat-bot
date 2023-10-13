@@ -39,11 +39,13 @@ public class ExampleCallbackHandler implements BotCallbackHandler {
 
     @Override
     public void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException {
+        // Получение примера из БД
         String chatId = update.getCallbackQuery().getMessage().getChatId().toString();
         Long id = getIdFromString(CallbackFormat.EXAMPLE_FORMAT, update.getCallbackQuery().getData());
         ExampleEntity example = exampleService.getById(id);
         ExampleDto exampleDto = mapper.map(example, ExampleDto.class);
 
+        // Отправка сообщений
         SendMessage sendMessage = new SendMessage(chatId, getExampleText(exampleDto));
         sendMessage.enableHtml(true);
         bot.execute(sendMessage);
@@ -54,6 +56,7 @@ public class ExampleCallbackHandler implements BotCallbackHandler {
         return Pattern.compile(CallbackFormat.EXAMPLE_FORMAT.getApplicableRegex()).matcher(callback).find();
     }
 
+    // Получение текста примера
     private String getExampleText(ExampleDto example) {
         return new StringBuilder(wrapInBold(String.format(PRECONDITION_FORMAT, localeMessageSource.getMessage(EXAMPLE_PRECONDITION_MESSAGE_SOURCE))))
                 .append(addWrapLine(example.getPrecondition()))

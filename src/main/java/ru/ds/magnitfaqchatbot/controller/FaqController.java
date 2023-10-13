@@ -13,6 +13,9 @@ import ru.ds.magnitfaqchatbot.entity.FaqEntity;
 import ru.ds.magnitfaqchatbot.mapper.Mapper;
 import ru.ds.magnitfaqchatbot.service.FaqService;
 
+/**
+ * Контроллер частозадаваемых вопросов
+ */
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

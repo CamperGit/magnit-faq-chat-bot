@@ -20,6 +20,7 @@ public class BotConfiguration {
 
     @PostConstruct
     void postConstruct() throws TelegramApiException {
+        // Регистрация бота
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
         api.registerBot(telegramBot);
     }

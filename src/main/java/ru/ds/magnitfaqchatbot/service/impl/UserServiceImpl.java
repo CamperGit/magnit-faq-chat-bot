@@ -63,16 +63,21 @@ public class UserServiceImpl implements UserService {
                                 .faqPageSize(5)
                                 .build())
                 .build());
-        userEntity.setRoles(Collections.singletonList(getRandomRoleEntity()));
+        userEntity.setRoles(getRandomRoleEntities());
         return save(userEntity);
     }
 
-    private UserRoleEntity getRandomRoleEntity() {
+    private List<UserRoleEntity> getRandomRoleEntities() {
         List<String> roles = Stream.of(UserRole.ROLE_PERFUMERY, UserRole.ROLE_ALCOHOL, UserRole.ROLE_TOBACCO, UserRole.ROLE_TEXTILE)
                 .map(UserRole::name)
                 .collect(Collectors.toList());
+        Set<UserRoleEntity> roleEntities = new HashSet<>();
         Random random = new Random();
-        String roleTitle = roles.get(random.nextInt(roles.size()));
-        return userRoleService.findRoleByName(roleTitle);
+        int rolesCount = random.nextInt(roles.size() + 1);
+        for (int i = 0; i < rolesCount; i++) {
+            String roleTitle = roles.get(random.nextInt(roles.size()));
+            roleEntities.add(userRoleService.findRoleByName(roleTitle));
+        }
+        return new ArrayList<>(roleEntities);
     }
 }

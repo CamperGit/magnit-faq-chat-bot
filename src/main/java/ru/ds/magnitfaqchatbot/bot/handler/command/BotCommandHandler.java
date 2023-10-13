@@ -8,8 +8,21 @@ import ru.ds.magnitfaqchatbot.service.BotUtilService;
 
 public interface BotCommandHandler extends BotUtilService {
 
+    /**
+     * Метод обработки команды
+     *
+     * @param bot    - бот
+     * @param update - модель данных телеграм сообщения
+     * @throws TelegramApiException
+     */
     @Transactional
     void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException;
 
+    /**
+     * Проверка на применимость обработчика
+     *
+     * @param message - команда
+     * @return применим ли обработчик
+     */
     boolean isApplicable(String message);
 }
