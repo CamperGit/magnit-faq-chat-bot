@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 import ru.ds.magnitfaqchatbot.model.user.UserSettings;
 
 import javax.persistence.AttributeConverter;

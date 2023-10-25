@@ -40,6 +40,7 @@ public class SetFaqSearchCommandHandler implements BotCommandHandler {
     public void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException {
         Message message = update.getMessage();
         String chatId = message.getChatId().toString();
+        Long userId = message.getFrom().getId();
         String text = message.getText();
         //Поиск лимита поиска ЧаВо
         Matcher limitMatcher = Pattern.compile(COMMAND_PATTERN).matcher(text);
@@ -48,7 +49,7 @@ public class SetFaqSearchCommandHandler implements BotCommandHandler {
             //Лимит
             int newFaqSearchLimit = Integer.parseInt(limitGroup);
             //Получение и обновление лимита поиска ЧаВо и сохранения настроек пользователя
-            UserDto user = mapper.map(userService.getByTelegramId(chatId), UserDto.class);
+            UserDto user = mapper.map(userService.getByTelegramId(userId), UserDto.class);
             user.setSettings(UserSettings.builder()
                             .searchSettings(SearchSettings.builder()
                                     .faqPageSize(newFaqSearchLimit)

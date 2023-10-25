@@ -52,7 +52,7 @@ CREATE SEQUENCE example_id_seq START 1;
 CREATE TABLE IF NOT EXISTS public."user"
 (
     id bigint NOT NULL,
-    telegram_chat_id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    telegram_id bigint NOT NULL,
     full_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
     department character varying(255) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (id)
@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS public.user_role
 (
     id bigint NOT NULL,
     title character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    permissions jsonb NOT NULL,
     CONSTRAINT user_role_pkey PRIMARY KEY (id)
 );
 CREATE SEQUENCE user_role_id_seq START 1;

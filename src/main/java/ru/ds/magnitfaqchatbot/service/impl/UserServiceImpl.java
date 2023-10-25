@@ -25,8 +25,6 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
 
-    UserRoleService userRoleService;
-
     @Override
     public UserEntity save(UserEntity user) {
         return userRepository.save(user);
@@ -43,17 +41,17 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    public UserEntity getByTelegramId(String telegramId) {
+    public UserEntity getByTelegramId(Long telegramId) {
         return Optional.ofNullable(userRepository.findByTelegramId(telegramId))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Not found user for telegram id = %s", telegramId)));
     }
 
-    public UserEntity getByTelegramIdOrCreate(String telegramId) {
+    public UserEntity getByTelegramIdOrCreate(Long telegramId) {
         return Optional.ofNullable(userRepository.findByTelegramId(telegramId))
-                .orElseGet(() -> mockNotFoundUserEntityByTelegramId(telegramId));
+                .orElseGet(() -> createUserEntityByTelegramId(telegramId));
     }
 
-    private UserEntity mockNotFoundUserEntityByTelegramId(String telegramId) {
+    private UserEntity createUserEntityByTelegramId(Long telegramId) {
         UserEntity userEntity = new UserEntity();
         userEntity.setTelegramId(telegramId);
         userEntity.setFullName("Mocked user full name");
@@ -63,21 +61,7 @@ public class UserServiceImpl implements UserService {
                                 .faqPageSize(5)
                                 .build())
                 .build());
-        userEntity.setRoles(getRandomRoleEntities());
+        userEntity.setRoles(Collections.emptyList());
         return save(userEntity);
-    }
-
-    private List<UserRoleEntity> getRandomRoleEntities() {
-        List<String> roles = Stream.of(UserRole.ROLE_PERFUMERY, UserRole.ROLE_ALCOHOL, UserRole.ROLE_TOBACCO, UserRole.ROLE_TEXTILE)
-                .map(UserRole::name)
-                .collect(Collectors.toList());
-        Set<UserRoleEntity> roleEntities = new HashSet<>();
-        Random random = new Random();
-        int rolesCount = random.nextInt(roles.size() + 1);
-        for (int i = 0; i < rolesCount; i++) {
-            String roleTitle = roles.get(random.nextInt(roles.size()));
-            roleEntities.add(userRoleService.findRoleByName(roleTitle));
-        }
-        return new ArrayList<>(roleEntities);
     }
 }

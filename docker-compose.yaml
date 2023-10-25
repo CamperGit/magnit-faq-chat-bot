@@ -11,5 +11,17 @@ services:
       - "5460:5432"
     volumes:
       - magnitdata:/var/lib/postgresql/data
+  db-auth:
+    image: postgres:11.14
+    restart: always
+    environment:
+      POSTGRES_DB: "magnit-faq-bot-auth-db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - "5461:5432"
+    volumes:
+      - magnitauthdata:/var/lib/postgresql/data
 volumes:
   magnitdata:
+  magnitauthdata:

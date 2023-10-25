@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AlgorithmCallbackHandler implements BotCallbackHandler {
 
-    static String TEXT_FORMAT = "%s: ";
     static String ALGORITHM_TEXT_MESSAGE_SOURCE = "algorithm.text";
     static String ALGORITHM_EXAMPLES_MESSAGE_SOURCE = "algorithm.examples";
 
@@ -59,7 +58,7 @@ public class AlgorithmCallbackHandler implements BotCallbackHandler {
     // Получение текста алгоритма
     private String getAlgorithmText(AlgorithmDto algorithm) {
         StringBuilder builder = new StringBuilder(addWrapLine(wrapInBold(algorithm.getTitle())))
-                .append(addWrapLine(wrapInBold(String.format(TEXT_FORMAT, localeMessageSource.getMessage(ALGORITHM_TEXT_MESSAGE_SOURCE)))))
+                .append(addWrapLine(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(ALGORITHM_TEXT_MESSAGE_SOURCE)))))
                 .append(algorithm.getText());
 
         if (!CollectionUtils.isEmpty(algorithm.getExamples())) {

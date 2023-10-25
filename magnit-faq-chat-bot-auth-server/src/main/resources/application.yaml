@@ -1,0 +1,11 @@
+server:
+  port: 8092
+
+spring:
+  jpa:
+    generate-ddl: false
+  datasource:
+    password: password
+    username: user
+    url: jdbc:postgresql://localhost:5461/magnit-faq-bot-auth-db?stringtype=unspecified
+

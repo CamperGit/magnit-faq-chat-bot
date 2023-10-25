@@ -25,6 +25,7 @@ import ru.ds.magnitfaqchatbot.interceptor.HttpLoggingInterceptor;
 
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -65,6 +66,7 @@ public class CommonConfiguration {
     }
 
     public static RestTemplate restTemplateForService(
+            Long readTimeout,
             String serviceUrl,
             Collection<ClientHttpRequestInterceptor> interceptors,
             Collection<? extends HttpMessageConverter<?>> messageConverters
@@ -77,6 +79,7 @@ public class CommonConfiguration {
                 .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
                 .interceptors(interceptors != null ? interceptors : Collections.emptyList())
                 .messageConverters(messageConverters != null ? messageConverters : Collections.emptyList())
+                .setReadTimeout(Duration.ofSeconds(readTimeout))
                 .build();
     }
 

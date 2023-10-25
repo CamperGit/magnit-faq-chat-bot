@@ -20,7 +20,7 @@ public class UserDto {
 
     String department;
 
-    String telegramId;
+    Long telegramId;
 
     UserSettings settings;
 

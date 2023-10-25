@@ -14,8 +14,8 @@ public interface UserService {
     void deleteById(Long id);
 
     @Transactional
-    UserEntity getByTelegramId(String telegramId);
+    UserEntity getByTelegramId(Long telegramId);
 
     @Transactional
-    UserEntity getByTelegramIdOrCreate(String telegramId);
+    UserEntity getByTelegramIdOrCreate(Long telegramId);
 }

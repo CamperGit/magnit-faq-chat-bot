@@ -9,6 +9,7 @@ import ru.ds.magnitfaqchatbot.repository.UserRoleRepository;
 import ru.ds.magnitfaqchatbot.service.UserRoleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,11 @@ public class UserRoleServiceImpl implements UserRoleService {
     public UserRoleEntity findRoleByName(String role) {
         return userRoleRepository.findByTitle(role)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Not found user role for title = %s", role)));
+    }
+
+    @Override
+    public List<UserRoleEntity> findRolesByNames(List<String> roles) {
+        return userRoleRepository.findAllByTitleIn(roles);
     }
 
     @Override

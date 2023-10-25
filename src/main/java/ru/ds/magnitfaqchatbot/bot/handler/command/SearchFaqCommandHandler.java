@@ -17,10 +17,9 @@ import ru.ds.magnitfaqchatbot.dto.UserRoleDto;
 import ru.ds.magnitfaqchatbot.entity.FaqEntity;
 import ru.ds.magnitfaqchatbot.mapper.Mapper;
 import ru.ds.magnitfaqchatbot.model.faq.FaqSearchPayload;
-import ru.ds.magnitfaqchatbot.model.role.CategoryPermissions;
-import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 import ru.ds.magnitfaqchatbot.service.FaqService;
 import ru.ds.magnitfaqchatbot.service.LocaleMessageSource;
+import ru.ds.magnitfaqchatbot.service.RoleCategoryResolverService;
 import ru.ds.magnitfaqchatbot.service.UserService;
 
 import java.util.List;
@@ -33,10 +32,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SearchFaqCommandHandler implements BotCommandHandler {
-
-    static String QUESTION_FORMAT = "%s: ";
-    static String ANSWER_FORMAT = "%s: ";
-    static String CATEGORY_FORMAT = "%s: ";
 
     static int PAGE_NUMBER = 0;
 
@@ -54,13 +49,16 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
 
     UserService userService;
 
+    RoleCategoryResolverService roleCategoryResolverService;
+
     Mapper mapper;
 
     @Override
     public void handle(MagnitFaqChatBot bot, Update update) throws TelegramApiException {
         //Получение начальных данных
+        Long telegramUserId = update.getMessage().getFrom().getId();
         String chatId = update.getMessage().getChatId().toString();
-        UserDto user = mapper.map(userService.getByTelegramId(chatId), UserDto.class);
+        UserDto user = mapper.map(userService.getByTelegramId(telegramUserId), UserDto.class);
         String text = update.getMessage().getText();
 
         //Поиск
@@ -93,14 +91,8 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
     }
 
     private List<String> getUserCategoriesIn(UserDto user) {
-        return user.getRoles()
-                .stream()
-                .map(UserRoleDto::getPermissions)
-                .map(RolePermissions::getCategoryPermissions)
-                .map(CategoryPermissions::getCategories)
-                .flatMap(List::stream)
-                .distinct()
-                .collect(Collectors.toList());
+        List<String> roles = user.getRoles().stream().map(UserRoleDto::getTitle).collect(Collectors.toList());
+        return roleCategoryResolverService.resolveCategories(roles);
     }
 
     private void generateAndSendFaqMessage(MagnitFaqChatBot bot, String chatId, FaqDto faqDto) throws TelegramApiException {
@@ -113,11 +105,11 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
     private String getFaqText(FaqDto faq) {
         StringBuilder builder = new StringBuilder(addWrapLine(wrapInBold(faq.getTitle())))
                 .append(addWrapLine())
-                .append(wrapInBold(String.format(CATEGORY_FORMAT, localeMessageSource.getMessage(FAQ_CATEGORY_MESSAGE_SOURCE))))
+                .append(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(FAQ_CATEGORY_MESSAGE_SOURCE))))
                 .append(addWrapLine(faq.getCategory().getTitle()))
-                .append(wrapInBold(String.format(QUESTION_FORMAT, localeMessageSource.getMessage(FAQ_QUESTION_MESSAGE_SOURCE))))
+                .append(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(FAQ_QUESTION_MESSAGE_SOURCE))))
                 .append(addWrapLine(faq.getQuestion()))
-                .append(wrapInBold(String.format(ANSWER_FORMAT, localeMessageSource.getMessage(FAQ_ANSWER_MESSAGE_SOURCE))))
+                .append(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(FAQ_ANSWER_MESSAGE_SOURCE))))
                 .append(faq.getAnswer());
 
         if (!CollectionUtils.isEmpty(faq.getAlgorithms())) {

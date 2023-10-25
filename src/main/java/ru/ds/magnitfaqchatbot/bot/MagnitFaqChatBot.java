@@ -60,7 +60,7 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             //CallbackQuery handling
             if (update.hasCallbackQuery() && !update.getCallbackQuery().getData().equals("null")) {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
-                createNewUserByTelegramId(callbackQuery.getMessage().getChatId().toString());
+                createNewUserByTelegramId(callbackQuery.getMessage().getFrom().getId());
                 String callback = callbackQuery.getData();
                 BotCallbackHandler botCallbackHandler = botCallbackHandlerProvider.getBotCallbackHandler(callback);
                 if (botCallbackHandler != null) {
@@ -71,7 +71,7 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             //Commands and nonCommands messages handling
             Message message = update.getMessage();
             if (message != null && message.hasText()) {
-                createNewUserByTelegramId(message.getChatId().toString());
+                createNewUserByTelegramId(message.getFrom().getId());
                 String text = message.getText();
                 BotCommandHandler botCommandHandler = botCommandHandlerProvider.getBotCommandHandler(text);
                 botCommandHandler.handle(this, update);
@@ -82,7 +82,7 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
         }
     }
 
-    private UserEntity createNewUserByTelegramId(String telegramId) {
+    private UserEntity createNewUserByTelegramId(Long telegramId) {
         return userService.getByTelegramIdOrCreate(telegramId);
     }
 }

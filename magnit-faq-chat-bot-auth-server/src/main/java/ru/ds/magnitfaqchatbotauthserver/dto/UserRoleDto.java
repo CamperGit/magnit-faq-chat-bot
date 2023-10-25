@@ -1,17 +1,17 @@
-package ru.ds.magnitfaqchatbot.model.role;
-
+package ru.ds.magnitfaqchatbotauthserver.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryPermissions {
+public class UserRoleDto {
 
-    List<String> categories;
+    Long id;
+
+    String title;
 }

@@ -22,6 +22,7 @@ import ru.ds.magnitfaqchatbot.service.FaqService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.ds.magnitfaqchatbot.entity.specification.Specifications.inOrReturnNull;
@@ -64,6 +65,10 @@ public class FaqServiceImpl implements FaqService {
         String sortProperty = searchPayload.getSortProperty();
         int pageNumber = searchPayload.getPageNumber();
         int pageSize = searchPayload.getPageSize();
+
+        if (CollectionUtils.isEmpty(searchPayload.getCategoriesIn())) {
+            return Page.empty();
+        }
 
         List<Specification<FaqEntity>> specifications = Arrays.asList(
                 Specifications.Or.<FaqEntity>builder()

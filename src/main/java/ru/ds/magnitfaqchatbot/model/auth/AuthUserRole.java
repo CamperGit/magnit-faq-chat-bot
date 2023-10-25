@@ -1,14 +1,13 @@
-package ru.ds.magnitfaqchatbot.model.role;
+package ru.ds.magnitfaqchatbot.model.auth;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RolePermissions {
+public class AuthUserRole {
 
-    CategoryPermissions categoryPermissions;
+    String title;
 }

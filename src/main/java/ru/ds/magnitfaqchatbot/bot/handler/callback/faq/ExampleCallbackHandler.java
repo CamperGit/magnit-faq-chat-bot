@@ -27,9 +27,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ExampleCallbackHandler implements BotCallbackHandler {
-
-    static String PRECONDITION_FORMAT = "%s: ";
-    static String SOLUTION_FORMAT = "%s: ";
     static String EXAMPLE_PRECONDITION_MESSAGE_SOURCE = "example.precondition";
     static String EXAMPLE_SOLUTION_MESSAGE_SOURCE = "example.solution";
 
@@ -58,10 +55,10 @@ public class ExampleCallbackHandler implements BotCallbackHandler {
 
     // Получение текста примера
     private String getExampleText(ExampleDto example) {
-        return new StringBuilder(wrapInBold(String.format(PRECONDITION_FORMAT, localeMessageSource.getMessage(EXAMPLE_PRECONDITION_MESSAGE_SOURCE))))
+        return new StringBuilder(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(EXAMPLE_PRECONDITION_MESSAGE_SOURCE))))
                 .append(addWrapLine(example.getPrecondition()))
                 .append(addWrapLine())
-                .append(wrapInBold(String.format(SOLUTION_FORMAT, localeMessageSource.getMessage(EXAMPLE_SOLUTION_MESSAGE_SOURCE))))
+                .append(wrapInBold(String.format("%s: ", localeMessageSource.getMessage(EXAMPLE_SOLUTION_MESSAGE_SOURCE))))
                 .append(addWrapLine(example.getSolution()))
                 .toString();
     }

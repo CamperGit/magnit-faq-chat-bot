@@ -29,8 +29,8 @@ public class UserEntity {
     @Column(name = "department")
     String department;
 
-    @Column(name = "telegram_chat_id")
-    String telegramId;
+    @Column(name = "telegram_id")
+    Long telegramId;
 
     @Column(name = "settings", columnDefinition = "jsonb", nullable = false)
     @Convert(converter = UserSettingsJsonConverter.class)

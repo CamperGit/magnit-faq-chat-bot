@@ -2,8 +2,6 @@ package ru.ds.magnitfaqchatbot.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.ds.magnitfaqchatbot.model.converter.RolePermissionsJsonConverter;
-import ru.ds.magnitfaqchatbot.model.role.RolePermissions;
 
 import javax.persistence.*;
 
@@ -24,8 +22,4 @@ public class UserRoleEntity {
 
     @Column(name = "title")
     String title;
-
-    @Column(name = "permissions", columnDefinition="jsonb", nullable = false)
-    @Convert(converter = RolePermissionsJsonConverter.class)
-    RolePermissions permissions;
 }

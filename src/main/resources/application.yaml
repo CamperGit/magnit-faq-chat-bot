@@ -21,3 +21,29 @@ button:
   limit:
     algorithms: 3
     examples: 3
+
+rest:
+  template:
+    read-timeout: 60
+    auth-user-service-name: http://localhost:8092
+
+api:
+  auth:
+    get-roles-by-telegram-id-resource: /v1/user/telegram/%d
+
+category:
+  mapping:
+    ROLE_ALCOHOL:
+      - Алкоголь
+    ROLE_TOBACCO:
+      - Табак
+    ROLE_TEXTILE:
+      - Текстиль
+    ROLE_PERFUMERY:
+      - Парфюмерия
+    ROLE_USER:
+    ROLE_ADMIN:
+      - Алкоголь
+      - Табак
+      - Текстиль
+      - Парфюмерия
