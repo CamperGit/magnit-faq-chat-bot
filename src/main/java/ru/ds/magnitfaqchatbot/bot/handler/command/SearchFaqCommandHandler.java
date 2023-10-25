@@ -61,11 +61,15 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
         UserDto user = mapper.map(userService.getByTelegramId(telegramUserId), UserDto.class);
         String text = update.getMessage().getText();
 
+        //Получение доступных пользователю категорий
+        List<String> roles = user.getRoles().stream().map(UserRoleDto::getTitle).collect(Collectors.toList());
+        List<String> categoriesIn = roleCategoryResolverService.resolveCategories(roles);
+
         //Поиск
         Page<FaqEntity> search = faqService.search(FaqSearchPayload.builder()
                 .questionLike(text)
                 .titleLike(text)
-                .categoriesIn(getUserCategoriesIn(user))
+                .categoriesIn(categoriesIn)
                 .pageNumber(PAGE_NUMBER)
                 .pageSize(user.getSettings().getSearchSettings().getFaqPageSize())
                 .build());
@@ -88,11 +92,6 @@ public class SearchFaqCommandHandler implements BotCommandHandler {
     @Override
     public boolean isApplicable(String message) {
         return false;
-    }
-
-    private List<String> getUserCategoriesIn(UserDto user) {
-        List<String> roles = user.getRoles().stream().map(UserRoleDto::getTitle).collect(Collectors.toList());
-        return roleCategoryResolverService.resolveCategories(roles);
     }
 
     private void generateAndSendFaqMessage(MagnitFaqChatBot bot, String chatId, FaqDto faqDto) throws TelegramApiException {
