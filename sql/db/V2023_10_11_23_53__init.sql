@@ -53,8 +53,9 @@ CREATE TABLE IF NOT EXISTS public."user"
 (
     id bigint NOT NULL,
     telegram_id bigint NOT NULL,
-    full_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    department character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    username character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    full_name character varying(255) COLLATE pg_catalog."default",
+    department character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT user_pkey PRIMARY KEY (id)
 );
 CREATE SEQUENCE user_id_seq START 1;

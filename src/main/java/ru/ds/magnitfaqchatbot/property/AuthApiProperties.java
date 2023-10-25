@@ -19,6 +19,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthApiProperties {
 
-    @NotEmpty(message = "Get roles by telegram id resource not found")
-    String getRolesByTelegramIdResource;
+    @NotEmpty(message = "Get user by telegram id resource not found")
+    String getUserByTelegramIdResource;
 }

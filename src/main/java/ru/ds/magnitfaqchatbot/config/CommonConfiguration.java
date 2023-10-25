@@ -19,6 +19,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.ds.magnitfaqchatbot.interceptor.HttpLoggingInterceptor;
@@ -30,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Configuration
+@EnableScheduling
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommonConfiguration {
     public static final String DEFAULT_OBJECT_MAPPER_BEAN = "objectMapperBean";

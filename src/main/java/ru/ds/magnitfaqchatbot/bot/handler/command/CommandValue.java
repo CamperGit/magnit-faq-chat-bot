@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public enum CommandValue {
 
     SET_SEARCH_LIMIT("/set_search_limit"),
-    REFRESH_ROLES("/refresh_roles"),
+    SYNCHRONIZE_USER("/synchronize"),
     GET_USER_ID("/get_user_id");
 
     String value;

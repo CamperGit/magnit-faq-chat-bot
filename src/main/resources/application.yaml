@@ -29,7 +29,11 @@ rest:
 
 api:
   auth:
-    get-roles-by-telegram-id-resource: /v1/user/telegram/%d
+    get-user-by-telegram-id-resource: /v1/user/telegram/%d
+
+scheduler:
+  user-synchronization: 0 0 22 */1 * *
+#  user-synchronization: "* */1 * * * *"
 
 category:
   mapping:

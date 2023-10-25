@@ -33,8 +33,7 @@ public class UserController {
 
 
     @GetMapping("/telegram/{telegramId}")
-    public ResponseEntity<List<UserRoleDto>> getUserRolesByTelegramId(@PathVariable Long telegramId) {
-        UserEntity user = userService.getByTelegramId(telegramId);
-        return ResponseEntity.ok(mapper.mapAsList(user.getRoles(), UserRoleDto.class));
+    public ResponseEntity<UserDto> getUserByTelegramId(@PathVariable Long telegramId) {
+        return ResponseEntity.ok(mapper.map(userService.getByTelegramId(telegramId), UserDto.class));
     }
 }

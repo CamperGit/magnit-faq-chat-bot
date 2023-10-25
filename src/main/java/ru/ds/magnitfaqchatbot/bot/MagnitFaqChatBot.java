@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.ds.magnitfaqchatbot.bot.handler.callback.BotCallbackHandler;
 import ru.ds.magnitfaqchatbot.bot.handler.command.BotCommandHandler;
@@ -36,7 +37,8 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
 
     public MagnitFaqChatBot(TelegramBotProperties botProperties,
                             BotCallbackHandlerProvider botCallbackHandlerProvider,
-                            BotCommandHandlerProvider botCommandHandlerProvider, UserService userService) {
+                            BotCommandHandlerProvider botCommandHandlerProvider,
+                            UserService userService) {
         super(new DefaultBotOptions());
         this.botProperties = botProperties;
         this.botCallbackHandlerProvider = botCallbackHandlerProvider;
@@ -60,7 +62,8 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             //CallbackQuery handling
             if (update.hasCallbackQuery() && !update.getCallbackQuery().getData().equals("null")) {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
-                createNewUserByTelegramId(callbackQuery.getMessage().getFrom().getId());
+                User fromUser = callbackQuery.getMessage().getFrom();
+                createNewUserByTelegramId(fromUser.getId(), fromUser.getUserName());
                 String callback = callbackQuery.getData();
                 BotCallbackHandler botCallbackHandler = botCallbackHandlerProvider.getBotCallbackHandler(callback);
                 if (botCallbackHandler != null) {
@@ -71,7 +74,8 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
             //Commands and nonCommands messages handling
             Message message = update.getMessage();
             if (message != null && message.hasText()) {
-                createNewUserByTelegramId(message.getFrom().getId());
+                User fromUser = message.getFrom();
+                createNewUserByTelegramId(fromUser.getId(), fromUser.getUserName());
                 String text = message.getText();
                 BotCommandHandler botCommandHandler = botCommandHandlerProvider.getBotCommandHandler(text);
                 botCommandHandler.handle(this, update);
@@ -82,7 +86,7 @@ public class MagnitFaqChatBot extends TelegramLongPollingBot {
         }
     }
 
-    private UserEntity createNewUserByTelegramId(Long telegramId) {
-        return userService.getByTelegramIdOrCreate(telegramId);
+    private UserEntity createNewUserByTelegramId(Long telegramId, String username) {
+        return userService.getByTelegramIdOrCreate(telegramId, username);
     }
 }

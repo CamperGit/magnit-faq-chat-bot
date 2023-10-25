@@ -23,6 +23,9 @@ public class UserEntity {
     @Column(name = "id")
     Long id;
 
+    @Column(name = "username")
+    String username;
+
     @Column(name = "full_name")
     String fullName;
 
